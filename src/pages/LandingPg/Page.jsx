@@ -3,16 +3,18 @@ import HeaderSection from './HeaderSection'
 import Nav from '../../components/Nav'
 import BrandLogos from './BrandLogos'
 import Footer from './Footer'
+import BrowseStyle from './BrowseStyle'
 
-const Page = () => {
+const LandingPage = () => {
   return (
-    <div className='pt-6'>
-        <Nav/>
+    <div className=''>
+        
         <HeaderSection/>
         <BrandLogos/>
+        <BrowseStyle/>
         <Footer/>
-    </div>
+    </div>  
   )
 }
 
-export default Page
+export default LandingPage
