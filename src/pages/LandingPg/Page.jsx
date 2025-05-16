@@ -1,6 +1,5 @@
 import React from 'react'
 import HeaderSection from './HeaderSection'
-import Nav from '../../components/Nav'
 import BrandLogos from './BrandLogos'
 import Footer from './Footer'
 import BrowseStyle from './BrowseStyle'
