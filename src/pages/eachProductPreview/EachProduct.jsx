@@ -10,10 +10,13 @@ import { IoMdAdd } from "react-icons/io";
 import Reviews from "./Reviews";
 import YouMightLike from "./YouMightLike";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { cartStoreActions } from "@/store/cartStore";
 
 const EachProduct = () => {
   const params = useParams();
   const [orderQty, setOrderQty] = useState(1);
+  const dispatch = useDispatch();
 
   const decreaseOrderQty = () => {
     if (orderQty > 1) {
@@ -27,6 +30,7 @@ const EachProduct = () => {
     setOrderQty((prev) => prev + 1);
   };
 
+  //Query Calls
   const queryFn = async () => {
     const res = await fetch(
       `https://dummyjson.com/products/${params.productid}`
@@ -50,15 +54,34 @@ const EachProduct = () => {
     );
   if (error) return <p>An Error occured</p>;
 
+  // CLick of add to cart btn
+  const handleAddToCart = () => {
+    const cartValues = {
+      id: data.id,
+      image: data.images[0],
+      productName: data.title,
+      category: data.category,
+      price: data.price,
+    };
+
+    dispatch(cartStoreActions.addItemToCart(cartValues));
+    console.log("Added");
+  };
+
+  const handleRemove = (id)=>{
+    dispatch(cartStoreActions.removeItemFromCart(id))
+    console.log("Removed")
+  }
+
   return (
     <>
       <Nav />
 
       <main className="pt-24 px-8 lg:px-16">
         <div className="-fit">
-        <Link to="/all-products">
-          <IoMdArrowRoundBack className="text-4xl cursor-pointer hover:opacity-80" />
-        </Link>
+          <Link to="/all-products">
+            <IoMdArrowRoundBack className="text-4xl cursor-pointer hover:opacity-80" />
+          </Link>
         </div>
         <section className="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:justify-between lg:items-center lg:space-x-8">
           <div className="bg-[#F0EEED] rounded-lg lg:w-[45%]">
@@ -91,6 +114,7 @@ const EachProduct = () => {
             <p className="text-lg text-gray-500 md:text-xl">
               {data.description}
             </p>
+            <ButtonUI onClick={()=>handleRemove(data.id)} btnName="Remove"/>
 
             <div className="grid grid-cols-2 gap-3 py-4 font-semibold md:grid-cols-3 md:gap-6">
               <span className="bg-red-300/70 rounded-full w-fit px-3 py-1 text-[12px] md:text-[15px]">
@@ -144,7 +168,7 @@ const EachProduct = () => {
                   onClick={increaseOrderQty}
                 />
               </span>
-              <ButtonUI btnName="Add to Cart" />
+              <ButtonUI btnName="Add to Cart" onClick={handleAddToCart} />
             </div>
           </div>
         </section>

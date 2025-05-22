@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPg/Page";
 import AllProducts from "./pages/allProducts/AllProducts";
 import EachProduct from "./pages/eachProductPreview/EachProduct";
+import Login from "./pages/auth/Login";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Route index element={<LandingPage />} />
       <Route element={<AllProducts />} path="/all-products"></Route>
       <Route element={<EachProduct />} path="/all-products/:productid" />
+      <Route element={<Login/>} path="/login"/>
     </Routes>
   );
 }
