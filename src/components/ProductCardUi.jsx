@@ -1,10 +1,17 @@
 import React from "react";
 import ButtonUI from "./ButtonUI";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const ProductCardUi = ({ data }) => {
   return (
-    <section className="flex flex-col space-y-3 ">
+    <motion.section
+      className="flex flex-col space-y-3"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true, amount: 0.3 }}
+    >
       <div className="bg-[#F0EEED] rounded-lg relative">
         <img src={data.images[0]} alt={data.title} className="" />
       </div>
@@ -38,9 +45,11 @@ const ProductCardUi = ({ data }) => {
           </p>
         </span>
 
-        <Link to={`/all-products/${data.id}`}><ButtonUI btnName="Full Preview" className="mt-auto " /></Link>
+        <Link to={`/all-products/${data.id}`}>
+          <ButtonUI btnName="Full Preview" className="mt-auto " />
+        </Link>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

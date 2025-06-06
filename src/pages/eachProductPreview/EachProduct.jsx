@@ -5,18 +5,19 @@ import Nav from "@/components/Nav";
 import { useQuery } from "@tanstack/react-query";
 import { PacmanLoader } from "react-spinners";
 import ButtonUI from "@/components/ButtonUI";
-import { FaMinus } from "react-icons/fa6";
-import { IoMdAdd } from "react-icons/io";
 import Reviews from "./Reviews";
 import YouMightLike from "./YouMightLike";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cartStoreActions } from "@/store/cartStore";
 
 const EachProduct = () => {
   const params = useParams();
   const [orderQty, setOrderQty] = useState(1);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const dispatch = useDispatch();
+
+  const cartState = useSelector((state) => state.cartStoreReducer);
 
   const decreaseOrderQty = () => {
     if (orderQty > 1) {
@@ -54,31 +55,33 @@ const EachProduct = () => {
     );
   if (error) return <p>An Error occured</p>;
 
-  // CLick of add to cart btn
   const handleAddToCart = () => {
-    const cartValues = {
+    setButtonDisabled(true);
+    const cartItems = {
       id: data.id,
       image: data.images[0],
       productName: data.title,
       category: data.category,
-      price: data.price,
+      price: data.price.toFixed(2),
+    };
+
+    const cartValues = {
+      items: cartItems, 
     };
 
     dispatch(cartStoreActions.addItemToCart(cartValues));
+    
+
     console.log("Added");
   };
-
-  const handleRemove = (id)=>{
-    dispatch(cartStoreActions.removeItemFromCart(id))
-    console.log("Removed")
-  }
 
   return (
     <>
       <Nav />
 
       <main className="pt-24 px-8 lg:px-16">
-        <div className="-fit">
+        
+        <div className="w-fit">
           <Link to="/all-products">
             <IoMdArrowRoundBack className="text-4xl cursor-pointer hover:opacity-80" />
           </Link>
@@ -114,7 +117,6 @@ const EachProduct = () => {
             <p className="text-lg text-gray-500 md:text-xl">
               {data.description}
             </p>
-            <ButtonUI onClick={()=>handleRemove(data.id)} btnName="Remove"/>
 
             <div className="grid grid-cols-2 gap-3 py-4 font-semibold md:grid-cols-3 md:gap-6">
               <span className="bg-red-300/70 rounded-full w-fit px-3 py-1 text-[12px] md:text-[15px]">
@@ -157,7 +159,7 @@ const EachProduct = () => {
               </span>
             </div>
             <div className="border-t pt-6 border-gray-200 flex justify-between space-x-3 ">
-              <span className="flex justify- px-between space-x-8 items-center px-2 py-1 bg-[#F0F0F0] rounded-full text-xl lg:text-2xl">
+              {/* <span className="flex justify- px-between space-x-8 items-center px-2 py-1 bg-[#F0F0F0] rounded-full text-xl lg:text-2xl">
                 <FaMinus
                   className="cursor-pointer"
                   onClick={decreaseOrderQty}
@@ -167,7 +169,9 @@ const EachProduct = () => {
                   className="text-2xl cursor-pointer lg:text-3xl"
                   onClick={increaseOrderQty}
                 />
-              </span>
+              </span> */}
+              {/* <ButtonUI btnName= {`${buttonDisabled ? "Added" : "Add to Cart"}`} disabled={buttonDisabled} onClick={handleAddToCart} className="disabled:bg-gray-300 disabled:text-black" /> */}
+
               <ButtonUI btnName="Add to Cart" onClick={handleAddToCart} />
             </div>
           </div>

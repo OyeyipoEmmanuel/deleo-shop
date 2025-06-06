@@ -4,9 +4,13 @@ import { IoIosContact } from "react-icons/io";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { MdClose } from "react-icons/md";
 import { Link, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Nav = () => {
   const [mobileNav, setMobileNav] = useState(false);
+  const totalItemQty = useSelector((state) => state.cartStoreReducer.totalQty);
+
   return (
     <>
       <nav
@@ -55,38 +59,66 @@ const Nav = () => {
             </ul>
           </section>
           <section className="flex text-3xl space-x-3 lg:text-4xl">
-            <IoCartOutline
-              title="cart"
-              className="cursor-pointer hover:transition-all hover:duration-200"
-            />
+            <Link to="/cart">
+              <IoCartOutline
+                title="cart"
+                className="relative cursor-pointer hover:transition-all hover:duration-200"
+              />
+            </Link>
+
+            {totalItemQty == 0 ? (
+              " "
+            ) : (
+              
+                <motion.div
+                  key={totalItemQty}
+                  initial={{ scale: 1 }}
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute bg-red-700 w-5 h-4 rounded-full text-white text-[13px] flex items-center justify-center font-extrabold"
+                >
+                  {totalItemQty}
+                </motion.div>
+              
+            )}
+
             <Link to="/login">
               <IoIosContact title="login" className="cursor-pointer" />
             </Link>
           </section>
         </div>
-        {mobileNav && (
-          <section className="mx-auto text-center">
-            <ul className="flex flex-col text-lg space-y-4 mt-4">
-              <li className="cursor-pointer hover:opacity-65 hover:transition-all hover:duration-200">
-                <NavLink
-                  to="/all-products"
-                  className={({ isActive }) => (isActive ? "navActive" : "")}
-                >
-                  Shop
-                </NavLink>
-              </li>
-              <li className="cursor-pointer hover:opacity-65 hover:transition-all hover:duration-200">
-                On Sale
-              </li>
-              <li className="cursor-pointer hover:opacity-65 hover:transition-all hover:duration-200">
-                Article
-              </li>
-              <li className="cursor-pointer hover:opacity-65 hover:transition-all hover:duration-200">
-                Brands
-              </li>
-            </ul>
-          </section>
-        )}
+
+        <AnimatePresence>
+          {mobileNav && (
+            <motion.section
+              className="mx-auto text-center"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ul className="flex flex-col text-lg space-y-4 mt-4 overflow-hidden">
+                <li className="cursor-pointer hover:opacity-65 hover:transition-all hover:duration-200">
+                  <NavLink
+                    to="/all-products"
+                    className={({ isActive }) => (isActive ? "navActive" : "")}
+                  >
+                    Shop
+                  </NavLink>
+                </li>
+                <li className="cursor-pointer hover:opacity-65 hover:transition-all hover:duration-200">
+                  On Sale
+                </li>
+                <li className="cursor-pointer hover:opacity-65 hover:transition-all hover:duration-200">
+                  Article
+                </li>
+                <li className="cursor-pointer hover:opacity-65 hover:transition-all hover:duration-200">
+                  Brands
+                </li>
+              </ul>
+            </motion.section>
+          )}
+        </AnimatePresence>
       </nav>
     </>
   );
